@@ -18,6 +18,36 @@ else
   WKHTMLTOPDF_VERSION="0.12.3"
 fi
 
+echo "Using wkhtmltopdf version $WKHTMLTOPDF_VERSION"
+
+if [[ $WKHTMLTOPDF_VERSION = "0.12.5" ]];then
+
+WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.bionic_amd64.deb"
+WKHTMLTOPDF_DEB="$CACHE_DIR/wkhtmltox.deb"
+WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltox"
+WKHTMLTOPDF_BINARIES="$WKHTMLTOPDF_PATH/usr/local/bin"
+WKHTMLTOPDF_LIBS="$WKHTMLTOPDF_PATH/usr/local/lib"
+
+echo "-----> Downloading wkhtmltopdf tar"
+curl -L $WKHTMLTOPDF_URL -o $WKHTMLTOPDF_DEB
+
+dpkg -x $WKHTMLTOPDF_DEB $WKHTMLTOPDF_PATH
+
+echo "-----> Setting permissions"
+chmod +x $WKHTMLTOPDF_BINARIES/*
+
+echo "-----> Moving binaries to the right place"
+mv $WKHTMLTOPDF_BINARIES/* $BIN_PATH/
+
+echo "-----> Moving libs to the right place"
+mv $WKHTMLTOPDF_LIBS/* $LIB_PATH/
+
+echo "-----> Cleaning up"
+rm -rf $WKHTMLTOPDF_PATH
+
+exit 0
+fi
+
 WKHTMLTOPDF_URL="https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/${WKHTMLTOPDF_VERSION}/wkhtmltox-${WKHTMLTOPDF_VERSION}_linux-generic-amd64.tar.xz"
 WKHTMLTOPDF_TAR="$CACHE_DIR/wkhtmltox.tar.xz"
 WKHTMLTOPDF_PATH="$TMP_PATH/wkhtmltox"
